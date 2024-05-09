@@ -1,0 +1,48 @@
+// webpack.config.js
+
+const CopyPlugin = require("copy-webpack-plugin");
+const path = require("path");
+
+module.exports = {
+  mode: "development", // Set mode to 'production' for optimized build
+  devtool: "source-map",
+  entry: "./src/index.js", // Entry point of your library
+  output: {
+    path: path.resolve(__dirname, "dist"), // Output directory
+    filename: "chatpopup.js", // Name of the bundled library file
+    library: "testmax", // Name of the library exposed globally
+    libraryTarget: "umd", // Type of library target
+    umdNamedDefine: true,
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: "src/assets", to: "assets" },
+        { from: "src/style.css", to: "style.css" },
+      ],
+    }),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader", // Use Babel for JS/JSX files
+        },
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"], // Handle CSS files
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource", // Handle image files
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: "asset/resource", // Handle font files
+      },
+    ],
+  },
+};
